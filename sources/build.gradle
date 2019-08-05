@@ -1,0 +1,24 @@
+plugins {
+    id 'java'
+}
+
+group 'com.github.datapipe'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile project(':common')
+}
+
+configurations {
+    compile.extendsFrom slf4j
+    compile.extendsFrom mysqlBinlogConnector
+    compile.extendsFrom sql2o
+    compile.extendsFrom typesafeConfig
+    compile.extendsFrom mysqlDriver
+}

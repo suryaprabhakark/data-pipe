@@ -1,0 +1,6 @@
+rootProject.name = 'data-pipe'
+include 'common'
+include 'sources'
+include 'targets'
+include 'core'
+

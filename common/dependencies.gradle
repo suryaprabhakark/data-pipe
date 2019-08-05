@@ -1,0 +1,4 @@
+configurations {
+//    compile.extendsFrom slf4j
+//    compile.extendsFrom typesafeConfig
+}

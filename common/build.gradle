@@ -1,0 +1,13 @@
+plugins {
+    id 'java'
+}
+
+apply from: 'dependencies.gradle'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
