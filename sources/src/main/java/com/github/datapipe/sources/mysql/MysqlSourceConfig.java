@@ -4,6 +4,8 @@ package com.github.datapipe.sources.mysql;
 import com.github.datapipe.common.exceptions.ConfigurationMissingException;
 import com.typesafe.config.Config;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static com.github.datapipe.common.utils.ConfigUtils.getValue;
@@ -15,6 +17,8 @@ public class MysqlSourceConfig {
     private String url;
     private String username;
     private String password;
+    private List<String> tablesToSync;
+    private List<String> tablesToExclude;
 
     public String getHost() {
         return host;
@@ -64,6 +68,22 @@ public class MysqlSourceConfig {
         this.password = password;
     }
 
+    public List<String> getTablesToSync() {
+        return tablesToSync;
+    }
+
+    public void setTablesToSync(List<String> tablesToSync) {
+        this.tablesToSync = tablesToSync;
+    }
+
+    public List<String> getTablesToExclude() {
+        return tablesToExclude;
+    }
+
+    public void setTablesToExclude(List<String> tablesToExclude) {
+        this.tablesToExclude = tablesToExclude;
+    }
+
     public static MysqlSourceConfig from(Config config) {
         Optional<String> host = getValue(config, "host", String.class);
         Optional<Integer> port = getValue(config, "port", Integer.class);
@@ -79,6 +99,12 @@ public class MysqlSourceConfig {
         sourceConfig.setUrl(url);
         sourceConfig.setUsername(config.getString("username"));
         sourceConfig.setPassword(config.getString("password"));
+        if (config.hasPathOrNull("table-to-sync")) {
+            sourceConfig.setTablesToSync(Arrays.asList(config.getString("table-to-sync").split(",")));
+        }
+        if (config.hasPathOrNull("table-to-exclude")) {
+            sourceConfig.setTablesToExclude(Arrays.asList(config.getString("table-to-exclude").split(",")));
+        }
         return sourceConfig;
     }
 }

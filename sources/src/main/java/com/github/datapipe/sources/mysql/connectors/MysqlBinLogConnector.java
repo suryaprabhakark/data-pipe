@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -20,7 +21,6 @@ public class MysqlBinLogConnector implements MysqlConnector {
     private static final Logger logger = LoggerFactory.getLogger(MysqlBinLogConnector.class);
     private BinaryLogClient binaryLogClient;
     private CustomEventListener customEventListener;
-
 
     public MysqlBinLogConnector(MysqlSourceConfig config) {
         this.binaryLogClient = new BinaryLogClient(config.getHost(), config.getPort(), config.getUsername(), config.getPassword());
@@ -59,15 +59,21 @@ public class MysqlBinLogConnector implements MysqlConnector {
         private Lock lock = new ReentrantLock();
         private List<Event> events = Collections.synchronizedList(new ArrayList<>());
         private int maxBatchSize;
+        private ArrayBlockingQueue<Event> queue;
 
         public CustomEventListener(int batchSize) {
             this.maxBatchSize = batchSize;
+            queue = new ArrayBlockingQueue<Event>(batchSize);
         }
 
         @Override
         public void onEvent(Event event) {
             if (maxBatchSize <= events.size()) lock.lock();
-            events.add(event);
+            try {
+                queue.put(event);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         public List<Event> getEvents() {

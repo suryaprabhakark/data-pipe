@@ -30,7 +30,7 @@ public class DataPipe {
             throw new ConfigurationMissingException("Target configurations not found");
         }
 
-        MysqlSource source = new MysqlSource(config.getConfig("source.mysql"));
+        MysqlSource source = new MysqlSource(config.getConfig("source"));
         source.init();
 
 //        source -> store -> target;
