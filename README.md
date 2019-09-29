@@ -1,5 +1,5 @@
 # data-pipe
-A MySql to Redshift Migration tool, can be extended to any source and target.
+A MySql to Redshift Sync tool, can be extended to any source and target.
 
 ### Git Workflow
 This repository workflow is based on [A successful Git branching model](http://nvie.com/posts/a-successful-git-branching-model/) with two main branches with an infinite lifetime:
